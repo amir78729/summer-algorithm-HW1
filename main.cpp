@@ -3,6 +3,7 @@ using namespace std;
 struct user{
     string name;
     int sign_in_date;
+    struct travel *user_travels;
     struct user* prev_user;
     struct user* next_user;
 };
