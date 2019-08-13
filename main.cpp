@@ -5,7 +5,6 @@ struct user{
     int sign_in_date = 0;
     int number_of_travels = 0;
     struct travel* user_travels = NULL;
-    struct user* prev_user = NULL;
     struct user* next_user = NULL;
 }user;
 
@@ -13,7 +12,6 @@ struct travel{
     string origin;
     string destination;
     int money = 0;
-    struct travel* prev_travel = NULL;
     struct travel* next_travel = NULL;
 }travel;
 
