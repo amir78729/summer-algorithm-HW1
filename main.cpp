@@ -59,6 +59,13 @@ void show_prompt(){
 }
 void add_user(){
     cout << "adding a user..." << endl;
+    string temp_name;
+    cout << "please enter the user's name:" << endl;
+    cin >> temp_name;
+
+    string temp_sign_in_date;
+    cout << "please enter the user's sign-in date:" << endl;
+    cin >> temp_sign_in_date;
 }
 void add_travel(){
     cout << "adding a travel..." << endl;
@@ -66,9 +73,12 @@ void add_travel(){
 void remove_user(){
     cout << "removing a user..." << endl;
 }
-void print_a_user_info(){
-
+void print_a_user_info(struct user* user){
+    cout << "name: " << user -> name << endl;
+    cout << "sign-in date: " << user -> sign_in_date << endl;
+    cout << "travels: " << endl;
 }
-void print_a_travel_info(){
-
+void print_a_travel_info(struct travel* travel){
+    cout << "\tfrom \"" << travel -> origin << "\" to \"" << travel -> destination << "\"" << endl;
+    cout << "\tprice: " << travel -> money << "$" << endl;
 }
