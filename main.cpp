@@ -18,10 +18,11 @@ struct travel{
 //function proto-types:
 void add_user(struct user** main_head);
 void add_travel();
-void remove_user();
+void remove_user(struct user** main_head);
 void show_prompt();
 void print_a_user_info();
 void print_a_travel_info();
+void print_all_users_with_numbers();
 
 //global variables:
 
@@ -39,13 +40,13 @@ int main() {
         }
         switch (command){
             case 1:
-                add_user();
+                add_user(&head);
                 break;
             case 2:
                 add_travel();
                 break;
             case 3:
-                remove_user();
+                remove_user(&head);
                 break;
             default:
                 cout << "bad input!" << endl;
@@ -89,9 +90,28 @@ void add_travel(){
     cin >> temp_destination;
     //
 }
-void remove_user(){
+void remove_user(struct user** head){
     cout << "removing a user..." << endl;
+    print_all_users_with_numbers();
+    cout << "select a number to delete a user:" << endl;
+    int choice_number;// a number from 1 to n
+    cin >> choice_number;
+    choice_number--;// a number from 0 to n-1
+    struct user* temp = *head;
+    // if we ar going to delete the first user:
+    if (choice_number == 0){
+        *head = temp -> next_user;
+        free(temp);
+        return;
+    }
+    struct user *next = temp->next_user->next_user;
+
+    // Unlink the node from linked list
+    free(temp->next_user);  // Free memory
+
+    temp-> next_user = next;
 }
+
 void print_a_user_info(struct user* x){
     cout << "name: " << x -> name << endl;
     cout << "sign-in date: " << x -> sign_in_date << endl;
@@ -100,4 +120,7 @@ void print_a_user_info(struct user* x){
 void print_a_travel_info(struct travel* t){
     cout << "\tfrom \"" << t -> origin << "\" to \"" << t -> destination << "\"" << endl;
     cout << "\tprice: " << t -> money << "$" << endl;
+}
+void print_all_users_with_numbers(){
+
 }
