@@ -1,18 +1,18 @@
 #include <iostream>
 using namespace std;
 struct user{
-    string name;
-    string sign_in_date = 0;
-    int number_of_travels = 0;
-    struct travel* user_travels = NULL;
-    struct user* next_user = NULL;
+    char name[50];
+    char sign_in_date[50];
+//    int number_of_travels ;
+//    struct travel* user_travels ;
+    struct user* next_user ;
 }user;
 
 struct travel{
-    string origin;
-    string destination;
-    int money = 0;
-    struct travel* next_travel = NULL;
+    char origin;
+    char destination;
+    int money ;
+    struct travel* next_travel;
 }travel;
 
 //function proto-types:
@@ -20,15 +20,15 @@ void add_user(struct user** main_head);
 void add_travel();
 void remove_user(struct user** main_head);
 void show_prompt();
-void print_a_user_info();
+void print_a_user_info(struct user* x);
 void print_a_travel_info();
-void print_all_users_with_numbers();
+void print_all_users_with_numbers(struct user* node);
 
 //global variables:
 
 int main() {
-    struct user *head;
-
+    struct user *head = NULL;
+    struct user* new_user = (struct user*)malloc(sizeof(struct user));
     int command;
     while(true){
         show_prompt();
@@ -40,13 +40,22 @@ int main() {
         }
         switch (command){
             case 1:
+                cout << "adding a user..." << endl;
                 add_user(&head);
                 break;
             case 2:
+                cout << "adding a travel..." << endl;
                 add_travel();
                 break;
             case 3:
-                remove_user(&head);
+                cout << "removing a user..." << endl;
+                print_all_users_with_numbers(head);
+                if(head)
+                    remove_user(&head);
+                break;
+            case 4:
+                cout << "show all users..." << endl;
+                print_all_users_with_numbers(head);
                 break;
             default:
                 cout << "bad input!" << endl;
@@ -60,43 +69,54 @@ void show_prompt(){
     cout << " 1) add a user\n"
             " 2) add a travel\n"
             " 3) remove a user\n"
+            " 4) show all users information\n"
             "-1) end of the program\n";
 }
 void add_user(struct user** head){
-    cout << "adding a user..." << endl;
 
     struct user* new_user = (struct user*)malloc(sizeof(struct user));
+    struct user *last = *head;
 
-    string temp_name;
     cout << "please enter the user's name:" << endl;
-    cin >> temp_name;
-    new_user -> name = temp_name;
+    cin >> new_user -> name;
 
-    string temp_sign_in_date;
     cout << "please enter the user's sign-in date:" << endl;
-    cin >> temp_sign_in_date;
-    new_user -> sign_in_date = temp_sign_in_date;
+    cin >> new_user -> sign_in_date;
 
+    new_user->next_user = NULL;
+
+    /* 4. If the Linked List is empty, then make the new node as head */
+    if (*head == NULL)
+    {
+        *head = new_user;
+        return;
+    }
+
+    /* 5. Else traverse till the last node */
+    while (last->next_user != NULL)
+        last = last->next_user;
+
+    /* 6. Change the next of last node */
+    last->next_user = new_user;
+    return;
 }
 void add_travel(){
-    cout << "adding a travel..." << endl;
-    string temp_origin;
+    char temp_origin;
     cout << "please enter the user's name:" << endl;
     cin >> temp_origin;
     //
 
-    string temp_destination;
+    char temp_destination;
     cout << "please enter the user's sign-in date:" << endl;
     cin >> temp_destination;
     //
 }
 void remove_user(struct user** head){
-    cout << "removing a user..." << endl;
-    print_all_users_with_numbers();
     cout << "select a number to delete a user:" << endl;
     int choice_number;// a number from 1 to n
     cin >> choice_number;
     choice_number--;// a number from 0 to n-1
+
     struct user* temp = *head;
     // if we ar going to delete the first user:
     if (choice_number == 0){
@@ -105,9 +125,8 @@ void remove_user(struct user** head){
         return;
     }
     struct user *next = temp->next_user->next_user;
-
-    // Unlink the node from linked list
-    free(temp->next_user);  // Free memory
+    // Free memory
+    free(temp->next_user);
 
     temp-> next_user = next;
 }
@@ -117,10 +136,21 @@ void print_a_user_info(struct user* x){
     cout << "sign-in date: " << x -> sign_in_date << endl;
     cout << "travels: " << endl;
 }
-void print_a_travel_info(struct travel* t){
-    cout << "\tfrom \"" << t -> origin << "\" to \"" << t -> destination << "\"" << endl;
-    cout << "\tprice: " << t -> money << "$" << endl;
-}
-void print_all_users_with_numbers(){
-
+//void print_a_travel_info(struct travel* t){
+//    cout << "\tfrom \"" << t -> origin << "\" to \"" << t -> destination << "\"" << endl;
+//    cout << "\tprice: " << t -> money << "$" << endl;
+//}
+void print_all_users_with_numbers(struct user* my_head){
+    int num = 1;
+    if (my_head == NULL){
+        cout << "NO USER FOUND!" << endl;
+        return;
+    }
+    struct user* pointer = my_head;
+    while (pointer != NULL){
+        cout << num << ")-------------" << endl;
+        print_a_user_info(pointer);
+        pointer = pointer-> next_user;
+        num++;
+    }
 }
