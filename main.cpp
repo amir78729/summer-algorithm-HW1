@@ -3,7 +3,8 @@ using namespace std;
 struct user{
     char name[50];
     char sign_in_date[50];
-//    int number_of_travels ;
+    int number_of_travels ;
+    int account;
 //    struct travel* user_travels ;
     struct user* next_user ;
 }user;
@@ -83,6 +84,9 @@ void add_user(struct user** head){
     cout << "please enter the user's sign-in date:" << endl;
     cin >> new_user -> sign_in_date;
 
+    cout << "please enter the user's money:" << endl;
+    cin >> new_user -> account;
+
     new_user->next_user = NULL;
 
     /* 4. If the Linked List is empty, then make the new node as head */
@@ -134,7 +138,7 @@ void remove_user(struct user** head){
 void print_a_user_info(struct user* x){
     cout << "name: " << x -> name << endl;
     cout << "sign-in date: " << x -> sign_in_date << endl;
-    cout << "travels: " << endl;
+    cout << "account: " << x -> account << "$" << endl;
 }
 //void print_a_travel_info(struct travel* t){
 //    cout << "\tfrom \"" << t -> origin << "\" to \"" << t -> destination << "\"" << endl;
