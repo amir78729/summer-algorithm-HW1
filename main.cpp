@@ -1,5 +1,6 @@
 #include <iostream>
 using namespace std;
+
 struct user{
     char name[50];
     char sign_in_date[50];
@@ -12,18 +13,20 @@ struct user{
 struct travel{
     char origin;
     char destination;
-    int money ;
+    int price ;
+    int date;
     struct travel* next_travel;
 }travel;
 
 //function proto-types:
 void add_user(struct user** main_head);
-void add_travel();
+void add_travel(struct user** travel_head);
 void remove_user(struct user** main_head);
 void show_prompt();
 void print_a_user_info(struct user* x);
 void print_a_travel_info();
 void print_all_users_with_numbers(struct user* node);
+void print_all_travels_with_numbers(struct travel* a_users_travel_head);// for one user
 
 //global variables:
 
@@ -46,7 +49,7 @@ int main() {
                 break;
             case 2:
                 cout << "adding a travel..." << endl;
-                add_travel();
+//                add_travel();
                 break;
             case 3:
                 cout << "removing a user..." << endl;
@@ -87,6 +90,9 @@ void add_user(struct user** head){
     cout << "please enter the user's money:" << endl;
     cin >> new_user -> account;
 
+    //set a initial number for user's travel numbers...
+    new_user -> number_of_travels = 0;
+
     new_user->next_user = NULL;
 
     /* 4. If the Linked List is empty, then make the new node as head */
@@ -104,16 +110,22 @@ void add_user(struct user** head){
     last->next_user = new_user;
     return;
 }
-void add_travel(){
-    char temp_origin;
-    cout << "please enter the user's name:" << endl;
-    cin >> temp_origin;
-    //
+void add_travel(struct user** head){
+    struct travel* new_travel = (struct travel*)malloc(sizeof(struct travel));
 
-    char temp_destination;
-    cout << "please enter the user's sign-in date:" << endl;
-    cin >> temp_destination;
-    //
+    cout << "please enter the travel's origin:" << endl;
+    cin >> new_travel -> origin;
+
+    cout << "please enter the travel's destination:" << endl;
+    cin >> new_travel -> destination;
+
+    cout << "please enter the travel's price:" << endl;
+    cin >> new_travel -> price;
+
+    cout << "please enter the travel's date:" << endl;
+    cin >> new_travel -> date;
+
+    //boro bebinam che mikoni =)
 }
 void remove_user(struct user** head){
     cout << "select a number to delete a user:" << endl;
@@ -140,10 +152,11 @@ void print_a_user_info(struct user* x){
     cout << "sign-in date: " << x -> sign_in_date << endl;
     cout << "account: " << x -> account << "$" << endl;
 }
-//void print_a_travel_info(struct travel* t){
-//    cout << "\tfrom \"" << t -> origin << "\" to \"" << t -> destination << "\"" << endl;
-//    cout << "\tprice: " << t -> money << "$" << endl;
-//}
+void print_a_travel_info(struct travel* t){
+    cout << "\tfrom \"" << t -> origin << "\" to \"" << t -> destination << "\"" << endl;
+    cout << "\tdate: " << t -> date <<  endl;
+    cout << "\tprice: " << t -> price << "$" << endl;
+}
 void print_all_users_with_numbers(struct user* my_head){
     int num = 1;
     if (my_head == NULL){
@@ -155,6 +168,21 @@ void print_all_users_with_numbers(struct user* my_head){
         cout << num << ")-------------" << endl;
         print_a_user_info(pointer);
         pointer = pointer-> next_user;
+        num++;
+    }
+}
+
+void print_all_travels_with_numbers(struct travel* my_head){
+    int num = 1;
+    if (my_head == NULL){
+        cout << "NO TRAVELS FOUND!" << endl;
+        return;
+    }
+    struct travel* pointer = my_head;
+    while (pointer != NULL){
+        cout << num << ")-------------" << endl;
+        print_a_travel_info(pointer);
+        pointer = pointer-> next_travel;
         num++;
     }
 }
