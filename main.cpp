@@ -41,6 +41,7 @@ void remove_user(struct user** head);
 void delete_node(struct user *deleted,struct user *head);//negin
 void delete_user(struct user *head);//negin
 void add_money(struct user *head);//negin
+void add_money_2(struct user *user,struct travel *travel);//negin
 
 //main:
 int main() {//amirhossein
@@ -162,7 +163,7 @@ void add_travel_node(struct travel *travelHead,struct travel *new_travel){//negi
     cout<<"add TRAVEL done\n";
 }
 
-void add_travel(struct user *head){//negin
+void add_travel(struct user *head){
     int userNumber=user_search(head);
     cout<<userNumber<<endl;
     if(userNumber==-1){
@@ -175,7 +176,14 @@ void add_travel(struct user *head){//negin
             } while(userNumber != current->number);
             struct travel *new_travel=create_travel();
             add_travel_node(current->user_travels,new_travel);
-            current->number_of_travels++;
+            if((new_travel->money) > (current->money)){
+                cout<<"You don't have enough money,please add money to your account\n";
+                add_money_2(current,new_travel);
+                current->money =(current->money - new_travel->money);
+            }else{
+                current->money =(current->money - new_travel->money);
+            }
+            (current->number_of_travels)++;
         }else{
             cout<<"no user exists\n";
         }
@@ -438,4 +446,11 @@ void add_money(struct user *head){
     }if(found==0){
         cout<<"user not found\n";
     }
+}
+void add_money_2(struct user *user,struct travel *travel){
+    int money;
+    cout<<"your current money is:"<<user->money<<" the travel's money is:"<<travel->money<<endl;
+    cout<<"how much money do you want to add?\n";
+    cin>>money;
+    user->money = user->money +=money;
 }
