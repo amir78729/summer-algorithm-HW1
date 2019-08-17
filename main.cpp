@@ -330,4 +330,5 @@ void give_discount_by_date(struct user* head , int n){//amirhossein
         ptr = ptr->next;
     }
     cout << "done:)" << endl;
+
 }
