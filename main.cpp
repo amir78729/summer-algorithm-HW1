@@ -346,6 +346,7 @@ void give_discount_by_travel_numbers(struct user* head , int n){
 
 void give_discount_by_date(struct user* head , int n){
     struct user* ptr = head -> next;
+    bool done_or_not = false;
     int t;
     cout<<"from when?"<<endl;
     cin>>t;
@@ -358,16 +359,25 @@ void give_discount_by_date(struct user* head , int n){
         flag= false;
         if(ptr->sign_in_date > t){
             ptr -> money += x;
+            done_or_not = true;
             flag = true;
         }
         if(flag){
-            cout<<ptr->name<<"'s " <<"account: "<<ptr->money-x<<"$"<< " -> " << ptr->money <<"$"<<endl ;//amirhossein
+            cout<<"User number"<<ptr->number<<endl;
+            cout<<"user name:"<<ptr->name<<endl;
+            cout<<"sign in date:"<<ptr->sign_in_date<<endl;
+            cout<<"number of travels:"<<ptr->number_of_travels<<endl;
+            cout<<"money:"<<ptr->money-x<<"$"<< " -> " << ptr->money <<"$"<<endl ;
             cout<<"----------------------------------\n";
         }
         ptr = ptr->next;
     }
-    cout << "done:)" << endl;
+    if( done_or_not)
+        cout << "done:)" << endl;
+    else
+        cout<<"no user found to add discount"<<endl;
 }
+
 void show_everything(struct user *head){
     int num = 1;
     if (head == NULL){
