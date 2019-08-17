@@ -38,6 +38,9 @@ void bubbleSort(int arr[], int n);//amirhossein
 void give_discount_by_travel_numbers(struct user* head , int n);//amirhossein
 void give_discount_by_date(struct user* head , int n);//amirhossein
 void remove_user(struct user** head);
+void delete_node(struct user *deleted,struct user *head);//negin
+void delete_user(struct user *head);//negin
+void add_money(struct user *head);//negin
 
 //main:
 int main() {//amirhossein
@@ -67,9 +70,7 @@ int main() {//amirhossein
                 break;
             case 3:
                 cout << "removing a user..." << endl;
-                show_all_users(head);
-                if(head)
-                    remove_user(&head);
+                delete_user(head);
                 n--;
                 break;
             case 4:
@@ -89,6 +90,10 @@ int main() {//amirhossein
                 give_discount_by_date(head,n);
                 break;
             case 8:
+                cout << "adding money to your account..." << endl;
+                add_money(head);
+                break;
+            case 9:
                 cout << "showing EVERYTHING!" << endl;
                 show_everything(head);
                 break;
@@ -208,7 +213,7 @@ void show_all_users(struct user *my_head){//amirhossein
         cout << "NO USER FOUND!" << endl;
         return;
     }
-    struct user* pointer = my_head;
+    struct user* pointer = my_head -> next;
     while (pointer != NULL){
         cout << num << ")-------------" << endl;
         print_a_user_info(pointer);
@@ -276,7 +281,8 @@ void show_prompt(){//amirhossein
             " 5) show travel info for a user\n"
             " 6) give discount to users with minimum travels\n"
             " 7) give discount to users signed in after a date\n"
-            " 8) show everything!\n"
+            " 8) add money to a user\n"
+            " 9) show everything!\n"
             "-1) end of the program\n";
 }
 void swap(int *xp, int *yp){//amirhossein
@@ -385,4 +391,51 @@ void show_everything(struct user *head){
         num++;
     }
     puts("");
+}
+void delete_node(struct user *deleted,struct user *head){
+    struct user *current=head;
+    while(current->next!=deleted){
+        current=current->next;
+    }
+    struct user * temp=deleted->next;
+    free(deleted);
+    current->next=temp;
+}
+
+void delete_user(struct user *head){
+    int found=0;
+    struct user *current=head;
+    char name[50];
+    cout<<"enter your name\n";
+    cin>>name;
+    while(current!=NULL){
+        if(strcmp(current->name,name)==0) {
+            found++;
+            struct user *deleted=current;
+            delete_node(deleted,head);
+        }
+        current=current->next;
+    }if(found==0){
+        cout<<"user not found\n";
+    }
+}
+void add_money(struct user *head){
+    int found=0;
+    struct user *current=head;
+    char name[50];
+    cout<<"enter your name\n";
+    cin>>name;
+    while(current!=NULL){
+        if(strcmp(current->name,name)==0) {
+            found++;
+            cout<<"User found\n";
+            int extraMoney;
+            cout<<"How much money do you want to add?\n";
+            cin>>extraMoney;
+            current->money += extraMoney;
+        }
+        current=current->next;
+    }if(found==0){
+        cout<<"user not found\n";
+    }
 }
