@@ -198,6 +198,7 @@ int user_search(struct user *head){//negin
 void print_a_user_info(struct user* x){
     cout << "name: " << x -> name << endl;
     cout << "sign-in date: " << x -> sign_in_date << endl;
+    cout << "number of travels: " << x -> number_of_travels << endl;
     cout << "account: " << x -> money << "$" << endl;
 }
 
@@ -294,7 +295,7 @@ void bubbleSort(int arr[], int n){//amirhossein
                 swap(&arr[j], &arr[j+1]);
 }
 
-void give_discount_by_travel_numbers(struct user* head , int n){//amirhossein
+void give_discount_by_travel_numbers(struct user* head , int n){
     int k;
     cout << "How many users are you\ngoing to give discount?"<<endl;
     cin >> k;
@@ -311,32 +312,47 @@ void give_discount_by_travel_numbers(struct user* head , int n){//amirhossein
     cout << "how much?"<< endl;
     int x;
     cin >> x;
+    bool flag;
     while (ptr){
+        flag=false;
         for (int j = 0; j < k; ++j) {
-            if( ptr -> number_of_travels == array[j]  )
+            if( ptr -> number_of_travels == array[j]  ){
                 ptr -> money += x;
+                flag = true;
+            }
+        }
+        if(flag){
+            cout<<ptr->name<<"'s "<<"account: "<<ptr->money-x<<"$"<< " -> " << ptr->money <<"$"<<endl ;//amirhossein
+            cout<<"----------------------------------\n";
         }
         ptr = ptr->next;
     }
-    cout << "done:)" << endl;
+    cout << "done" << endl;
 }
 
-void give_discount_by_date(struct user* head , int n){//amirhossein
+void give_discount_by_date(struct user* head , int n){
     struct user* ptr = head -> next;
     int t;
     cout<<"from when?"<<endl;
     cin>>t;
-    ptr = head;
+    ptr = head->next ;
     cout << "how much?"<< endl;
     int x;
     cin >> x;
+    bool flag;
     while (ptr){
-        if(ptr->sign_in_date > t)
-            ptr->money += x;
+        flag= false;
+        if(ptr->sign_in_date > t){
+            ptr -> money += x;
+            flag = true;
+        }
+        if(flag){
+            cout<<ptr->name<<"'s " <<"account: "<<ptr->money-x<<"$"<< " -> " << ptr->money <<"$"<<endl ;//amirhossein
+            cout<<"----------------------------------\n";
+        }
         ptr = ptr->next;
     }
     cout << "done:)" << endl;
-
 }
 void show_everything(struct user *head){
     int num = 1;
