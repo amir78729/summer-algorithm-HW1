@@ -1,41 +1,52 @@
 #include <iostream>
+#include<bits/stdc++.h>
 using namespace std;
 
-struct user{
-    char name[50];
-    char sign_in_date[50];
-    int number_of_travels ;
-    int account;
-//    struct travel* user_travels ;
-    struct user* next_user ;
-}user;
-
 struct travel{
-    char origin;
-    char destination;
-    int price ;
+    char origin[50];
+    char destination[50];
+    int money;
     int date;
-    struct travel* next_travel;
-}travel;
+    struct travel *next_travel;
+};
+struct user{
+    int number;
+    char name[50];
+    int sign_in_date;
+    int number_of_travels;
+    int money; //amirhossein
+    struct user* next;
+    struct travel* user_travels;
+};
 
-//function proto-types:
-void add_user(struct user** main_head);
-void add_travel(struct user** travel_head);
-void remove_user(struct user** main_head);
-void show_prompt();
-void print_a_user_info(struct user* x);
-void print_a_travel_info();
-void print_all_users_with_numbers(struct user* node);
-void print_all_travels_with_numbers(struct travel* a_users_travel_head);// for one user
+/////////prototypes
+struct user *create_user();
+void add_user(struct user *head,struct user *new_user);
+void add(struct user *head);
+struct travel *create_travel();
+void add_travel_node(struct travel *travelHead,struct travel *new_travel);
+int user_search(struct user *head);
+void add_travel(struct user *head);
+void show_all_users(struct user *head);
+void show_trip_details(struct user *head);
 
-//global variables:
+void print_a_user_info(struct user* x);//amirhossein
+void show_prompt();//amirhossein
+void swap(int *xp, int *yp);//amirhossein
+void bubbleSort(int arr[], int n);//amirhossein
+void give_discount_by_travel_numbers(struct user* head , int n);//amirhossein
+void give_discount_by_date(struct user* head , int n);//amirhossein
+void remove_user(struct user** head);
 
-int main() {
-    struct user *head = NULL;
-    struct user* new_user = (struct user*)malloc(sizeof(struct user));
+//main:
+int main() {//amirhossein
+    struct user *head=(struct user *)malloc(sizeof(struct user));
+    head->next=NULL;
     int command;
+    int n = 0;
     while(true){
         show_prompt();
+//        cout << "n = " << n;
         cin >> command;
         //defining a sentinel for our loop
         if (command == -1){
@@ -45,21 +56,36 @@ int main() {
         switch (command){
             case 1:
                 cout << "adding a user..." << endl;
-                add_user(&head);
+                add(head);
+                n++;
+                cout << "user added\n";
                 break;
             case 2:
                 cout << "adding a travel..." << endl;
-//                add_travel();
+                add_travel(head);
                 break;
             case 3:
                 cout << "removing a user..." << endl;
-                print_all_users_with_numbers(head);
+                show_all_users(head);
                 if(head)
                     remove_user(&head);
+                n--;
                 break;
             case 4:
                 cout << "show all users..." << endl;
-                print_all_users_with_numbers(head);
+                show_all_users(head);
+                break;
+            case 5:
+                cout << "travel info..." << endl;
+                show_trip_details(head);
+                break;
+            case 6:
+                cout << "giving discount to k users with minimum travels..." << endl;
+                give_discount_by_travel_numbers(head,n);
+                break;
+            case 7:
+                cout << "giving discount to k users by sign in date..." << endl;
+                give_discount_by_date(head,n);
                 break;
             default:
                 cout << "bad input!" << endl;
@@ -68,64 +94,121 @@ int main() {
     }
     return 0;
 }
-void show_prompt(){
-    cout << "Enter a command:" << endl;
-    cout << " 1) add a user\n"
-            " 2) add a travel\n"
-            " 3) remove a user\n"
-            " 4) show all users information\n"
-            "-1) end of the program\n";
+
+struct user *create_user(){//negin
+    struct user *new_user=(struct user *)malloc(sizeof(struct user));
+    cout <<"enter your name\n";
+    cin >>new_user->name;
+    cout<<"enter your sign in date\n";
+    cin>>new_user->sign_in_date;
+    new_user->number_of_travels=0;
+    cout<<"enter your money\n";//amirhossein
+    cin>>new_user->money;//amirhossein
+    struct travel *user_travel=(struct travel *)malloc(sizeof(struct travel));
+    user_travel->next_travel=NULL;
+    new_user->user_travels=user_travel;
+    cout<<"create done\n";
+    return new_user;
 }
-void add_user(struct user** head){
+void add_user(struct user *head,struct user *new_user){//negin
+    int counter=0;
+    struct user *current=head;
+    while(current->next != NULL){
+        current = current->next;
+        counter++;
+    }
+    new_user->next=current->next;
+    current->next=new_user;
+    new_user->number=(counter+1);
+    cout<<"add user done\n";
+}
 
-    struct user* new_user = (struct user*)malloc(sizeof(struct user));
-    struct user *last = *head;
+void add(struct user *head){//negin
+    struct user *new_user=create_user();
+    add_user(head,new_user);
+}
 
-    cout << "please enter the user's name:" << endl;
-    cin >> new_user -> name;
+struct travel *create_travel(){//negin
+    struct travel *new_travel=(struct travel *)malloc(sizeof(struct travel));
+    cout<<"enter your origin\n";
+    cin>>new_travel->origin;
+    cout<<"enter your destination\n";
+    cin>>new_travel->destination;
+    cout<<"enter the price\n";
+    cin>>new_travel->money;
+    cout<<"enter the date of travel\n";
+    cin>>new_travel->date;
+    return new_travel;
+}
 
-    cout << "please enter the user's sign-in date:" << endl;
-    cin >> new_user -> sign_in_date;
+void add_travel_node(struct travel *travelHead,struct travel *new_travel){//negin
+    struct travel *current=travelHead;
+    while(current->next_travel!=NULL){
+        current = current->next_travel;
+    }
+    //cout<<"hi2\n";
+    new_travel->next_travel=current->next_travel;
+    current->next_travel=new_travel;
+    cout<<"add TRAVEL done\n";
+}
 
-    cout << "please enter the user's money:" << endl;
-    cin >> new_user -> account;
+void add_travel(struct user *head){//negin
+    int userNumber=user_search(head);
+    cout<<userNumber<<endl;
+    if(userNumber==-1){
+        cout<<"user does not exist\n";
+    }else {
+        struct user *current=head;
+        if(head->next!=NULL){
+            do{
+                current=current->next;
+            } while(userNumber != current->number);
+            struct travel *new_travel=create_travel();
+            add_travel_node(current->user_travels,new_travel);
+            current->number_of_travels++;
+        }else{
+            cout<<"no user exists\n";
+        }
+    }
+}
 
-    //set a initial number for user's travel numbers...
-    new_user -> number_of_travels = 0;
-
-    new_user->next_user = NULL;
-
-    /* 4. If the Linked List is empty, then make the new node as head */
-    if (*head == NULL)
-    {
-        *head = new_user;
-        return;
+int user_search(struct user *head){//negin
+    int found=0;
+    struct user *current=head;
+    char name[50];
+    cout<<"enter your name\n";
+    cin>>name;
+    while(current!=NULL){
+        if(strcmp(current->name,name)==0){
+            found++;
+            return current->number;
+        }
+        current=current->next;
+    }if(found==0){
+        cout<<"user not found\n";
+        return -1;
     }
 
-    /* 5. Else traverse till the last node */
-    while (last->next_user != NULL)
-        last = last->next_user;
-
-    /* 6. Change the next of last node */
-    last->next_user = new_user;
-    return;
 }
-void add_travel(struct user** head){
-    struct travel* new_travel = (struct travel*)malloc(sizeof(struct travel));
+void print_a_user_info(struct user* x){
+    cout << "name: " << x -> name << endl;
+    cout << "sign-in date: " << x -> sign_in_date << endl;
+    cout << "account: " << x -> money << "$" << endl;
+}
 
-    cout << "please enter the travel's origin:" << endl;
-    cin >> new_travel -> origin;
-
-    cout << "please enter the travel's destination:" << endl;
-    cin >> new_travel -> destination;
-
-    cout << "please enter the travel's price:" << endl;
-    cin >> new_travel -> price;
-
-    cout << "please enter the travel's date:" << endl;
-    cin >> new_travel -> date;
-
-    //boro bebinam che mikoni =)
+void show_all_users(struct user *my_head){//amirhossein
+    int num = 1;
+    if (my_head == NULL){
+        cout << "NO USER FOUND!" << endl;
+        return;
+    }
+    struct user* pointer = my_head;
+    while (pointer != NULL){
+        cout << num << ")-------------" << endl;
+        print_a_user_info(pointer);
+        pointer = pointer-> next;
+        num++;
+    }
 }
 void remove_user(struct user** head){
     cout << "select a number to delete a user:" << endl;
@@ -136,53 +219,115 @@ void remove_user(struct user** head){
     struct user* temp = *head;
     // if we ar going to delete the first user:
     if (choice_number == 0){
-        *head = temp -> next_user;
+        *head = temp -> next;
         free(temp);
         return;
     }
-    struct user *next = temp->next_user->next_user;
+    struct user *next = temp->next->next;
     // Free memory
-    free(temp->next_user);
+    free(temp->next);
 
-    temp-> next_user = next;
-}
-
-void print_a_user_info(struct user* x){
-    cout << "name: " << x -> name << endl;
-    cout << "sign-in date: " << x -> sign_in_date << endl;
-    cout << "account: " << x -> account << "$" << endl;
-}
-void print_a_travel_info(struct travel* t){
-    cout << "\tfrom \"" << t -> origin << "\" to \"" << t -> destination << "\"" << endl;
-    cout << "\tdate: " << t -> date <<  endl;
-    cout << "\tprice: " << t -> price << "$" << endl;
-}
-void print_all_users_with_numbers(struct user* my_head){
-    int num = 1;
-    if (my_head == NULL){
-        cout << "NO USER FOUND!" << endl;
-        return;
-    }
-    struct user* pointer = my_head;
-    while (pointer != NULL){
-        cout << num << ")-------------" << endl;
-        print_a_user_info(pointer);
-        pointer = pointer-> next_user;
-        num++;
-    }
+    temp-> next = next;
 }
 
-void print_all_travels_with_numbers(struct travel* my_head){
-    int num = 1;
-    if (my_head == NULL){
-        cout << "NO TRAVELS FOUND!" << endl;
-        return;
+void show_trip_details(struct user *head) {
+    int userNumber = user_search(head);
+    cout << userNumber << endl;
+    if (userNumber == -1) {
+        cout << "user does not exist\n";
+    } else {
+        struct user *current = head;
+        if (head->next != NULL) {
+            do {
+                current = current->next;
+            } while (userNumber != current->number);
+            struct travel *travelHead=current->user_travels;
+            struct travel *now=travelHead->next_travel;
+            if(now==NULL){
+                cout<<"No travel exists\n";
+            }else{
+                int i = 1;
+                while(now!=NULL){//amirhossein
+                    cout<<"\n"<<i<<")--------------------------"<<endl;
+                    cout<<"    "<<now->origin;
+                    cout<<" -> "<<now->destination<<endl;
+                    cout<<"    "<<"Price:"<<now->money<<endl;
+                    cout<<"    "<<"Date:"<<now->date<<endl;
+                    i++;
+                    now=now->next_travel;
+                }
+            }
+        }
     }
-    struct travel* pointer = my_head;
-    while (pointer != NULL){
-        cout << num << ")-------------" << endl;
-        print_a_travel_info(pointer);
-        pointer = pointer-> next_travel;
-        num++;
+}
+
+void show_prompt(){//amirhossein
+    cout << "Enter a command:" << endl;
+    cout << " 1) add a user\n"
+            " 2) add a travel\n"
+            " 3) remove a user\n"
+            " 4) show all users information\n"
+            " 5) show travel info for a user\n"
+            " 6) give discount to users with minimum travels\n"
+            " 7) give discount to users signed in after a date\n"
+            "-1) end of the program\n";
+}
+void swap(int *xp, int *yp){//amirhossein
+    int temp = *xp;
+    *xp = *yp;
+    *yp = temp;
+}
+
+void bubbleSort(int arr[], int n){//amirhossein
+    int i, j;
+    for (i = 0; i < n-1; i++)
+
+        // Last i elements are already in place
+        for (j = 0; j < n-i-1; j++)
+            if (arr[j] > arr[j+1])
+                swap(&arr[j], &arr[j+1]);
+}
+
+void give_discount_by_travel_numbers(struct user* head , int n){//amirhossein
+    int k;
+    cout << "How many users are you\ngoing to give discount?"<<endl;
+    cin >> k;
+    int array[n];
+    struct user* ptr = head -> next;
+    int i = 0;
+    while (ptr){
+        array[i] = ptr ->number_of_travels;
+        ptr = ptr->next;
+        i++;
     }
+    bubbleSort(array,n);
+    ptr = head;
+    cout << "how much?"<< endl;
+    int x;
+    cin >> x;
+    while (ptr){
+        for (int j = 0; j < k; ++j) {
+            if( ptr -> number_of_travels == array[j]  )
+                ptr -> money += x;
+        }
+        ptr = ptr->next;
+    }
+    cout << "done:)" << endl;
+}
+
+void give_discount_by_date(struct user* head , int n){//amirhossein
+    struct user* ptr = head -> next;
+    int t;
+    cout<<"from when?"<<endl;
+    cin>>t;
+    ptr = head;
+    cout << "how much?"<< endl;
+    int x;
+    cin >> x;
+    while (ptr){
+        if(ptr->sign_in_date > t)
+            ptr->money += x;
+        ptr = ptr->next;
+    }
+    cout << "done:)" << endl;
 }
