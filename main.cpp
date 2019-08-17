@@ -29,6 +29,7 @@ int user_search(struct user *head);
 void add_travel(struct user *head);
 void show_all_users(struct user *head);
 void show_trip_details(struct user *head);
+void show_everything(struct user *head);
 
 void print_a_user_info(struct user* x);//amirhossein
 void show_prompt();//amirhossein
@@ -86,6 +87,10 @@ int main() {//amirhossein
             case 7:
                 cout << "giving discount to k users by sign in date..." << endl;
                 give_discount_by_date(head,n);
+                break;
+            case 8:
+                cout << "showing EVERYTHING!" << endl;
+                show_everything(head);
                 break;
             default:
                 cout << "bad input!" << endl;
@@ -270,6 +275,7 @@ void show_prompt(){//amirhossein
             " 5) show travel info for a user\n"
             " 6) give discount to users with minimum travels\n"
             " 7) give discount to users signed in after a date\n"
+            " 8) show everything!\n"
             "-1) end of the program\n";
 }
 void swap(int *xp, int *yp){//amirhossein
@@ -331,4 +337,36 @@ void give_discount_by_date(struct user* head , int n){//amirhossein
     }
     cout << "done:)" << endl;
 
+}
+void show_everything(struct user *head){
+    int num = 1;
+    if (head == NULL){
+        cout << "NO USER FOUND!" << endl;
+        return;
+    }
+    struct user* pointer = head -> next;
+    while (pointer != NULL){
+        cout << num << ")---------------------------------" << endl;
+        print_a_user_info(pointer);
+        cout << "travels: " << endl;
+        struct travel* ptr = pointer -> user_travels -> next_travel;
+        if(ptr ==NULL){
+            cout<<"|    "<<"No travel exists!\n";
+        }else{
+            int i = 1;
+            while(ptr!=NULL){//amirhossein
+                cout<<"|    "<<i<<") - - - - - - - - - - - - - -"<<endl;
+                cout<<"|    "<<ptr->origin;
+                cout<<" -> "<<ptr->destination<<endl;
+                cout<<"|    "<<"Price:"<<ptr->money<<endl;
+                cout<<"|    "<<"Date:"<<ptr->date<<endl;
+                i++;
+                ptr=ptr->next_travel;
+            }
+        }
+
+        pointer = pointer-> next;
+        num++;
+    }
+    puts("");
 }
