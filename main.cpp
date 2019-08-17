@@ -1,5 +1,10 @@
 #include <iostream>
 #include<bits/stdc++.h>
+/*
+ * algorithm class home work number 1
+ * Amirhossein Alibakhshi
+ * Negin Hajisobhani
+ * */
 using namespace std;
 
 struct travel{
